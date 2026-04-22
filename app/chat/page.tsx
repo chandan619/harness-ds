@@ -10,18 +10,31 @@ import {
 
 /* ── Right panel ────────────────────────────────────────────────────────────── */
 function RightPanelCard({ title, children }: { title: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(true);
   return (
     <div
-      className="flex flex-col gap-0.5 pb-3 pt-1.5 px-1.5 rounded-[var(--radius-md)]"
+      className="flex flex-col gap-0.5 pb-1.5 pt-1.5 px-1.5 rounded-[var(--radius-md)]"
       style={{ background: "var(--color-harness-black)", border: "1px solid rgba(255,255,255,0.06)" }}
     >
-      <div className="flex items-center justify-between px-2 py-2 rounded-[6px]">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center justify-between px-2 py-2 rounded-[6px] w-full cursor-pointer hover:bg-white/5 transition-colors"
+      >
         <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-muted)" }}>
           {title}
         </span>
-        <IconChevronRight size={9} />
-      </div>
-      {children}
+        <span
+          className="transition-transform duration-200"
+          style={{
+            color: "var(--color-text-muted)",
+            display: "inline-flex",
+            transform: open ? "rotate(90deg)" : "rotate(0deg)",
+          }}
+        >
+          <IconChevronRight size={9} />
+        </span>
+      </button>
+      {open && <div className="flex flex-col gap-0.5 pb-1.5">{children}</div>}
     </div>
   );
 }
@@ -29,7 +42,7 @@ function RightPanelCard({ title, children }: { title: string; children: React.Re
 function MetaRow({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex items-center gap-2 px-2 py-2 rounded-[6px]">
-      <span style={{ color: "var(--color-text-muted)" }}>{icon}</span>
+      <span className="flex items-center justify-center w-4 h-4 flex-shrink-0" style={{ color: "var(--color-text-muted)" }}>{icon}</span>
       <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
         {label}
       </span>
@@ -69,7 +82,9 @@ function RightPanel() {
       <RightPanelCard title="Run stages">
         {["Repository connected", "Pipeline created", "Install dependencies", "Run unit tests", "Build application", "Security scan"].map((stage) => (
           <div key={stage} className="flex items-center gap-2 px-2 py-2 rounded-[6px]">
-            <IconCheck size={16} />
+            <span className="flex items-center justify-center w-4 h-4 flex-shrink-0" style={{ color: "var(--color-text-muted)" }}>
+              <IconCheck size={14} />
+            </span>
             <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
               {stage}
             </span>
@@ -105,16 +120,28 @@ function Step({ label, text }: { label: string; text: React.ReactNode }) {
 
 /* ── Chat prompt ────────────────────────────────────────────────────────────── */
 function ChatPrompt() {
+  const [value, setValue] = useState("");
   return (
     <div className="flex flex-col gap-2 w-full">
       <div
         className="flex flex-col rounded-[var(--radius-md)]"
         style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
       >
-        <div className="flex-1 px-4 py-3">
-          <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-disabled)" }}>
-            Ask about this run...
-          </span>
+        <div className="px-3 pt-2">
+          <textarea
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Ask about this run..."
+            rows={2}
+            className="w-full bg-transparent resize-none outline-none px-2 py-3"
+            style={{
+              color: value ? "var(--color-text-primary)" : "var(--color-text-disabled)",
+              fontSize: "14px",
+              fontFamily: "inherit",
+              letterSpacing: "-0.01em",
+              lineHeight: "20px",
+            }}
+          />
         </div>
         <div className="flex items-center justify-between p-2">
           <button
@@ -311,17 +338,13 @@ export default function ChatPage() {
             </div>
           </div>
 
-          {/* Right panel — fixed width, scrolls independently */}
+          {/* Right panel — fixed width, scrolls independently, no border */}
           <div
             className="flex-shrink-0 overflow-y-auto transition-all duration-[var(--duration-slow)]"
             style={{
               width: rightPanelOpen ? "280px" : "0px",
               opacity: rightPanelOpen ? 1 : 0,
-              paddingTop: rightPanelOpen ? "8px" : "0",
-              paddingBottom: rightPanelOpen ? "20px" : "0",
-              paddingLeft: rightPanelOpen ? "0" : "0",
-              paddingRight: rightPanelOpen ? "16px" : "0",
-              borderLeft: rightPanelOpen ? "1px solid rgba(255,255,255,0.06)" : "none",
+              padding: rightPanelOpen ? "8px 16px 20px 0" : "0",
             }}
           >
             {rightPanelOpen && <RightPanel />}
