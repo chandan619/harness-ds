@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import {
   HarnessIcon, IconPipeline, IconChevronRight, IconCheck,
@@ -188,17 +188,49 @@ function ChatPrompt() {
   );
 }
 
+/* ── Progressive reveal schedule ───────────────────────────────────────────── */
+type StepId = "bubble" | "init" | "kickstart" | "first-run" | "in-progress" | "completed" | "cta" | "actions";
+
+const REVEAL: { id: StepId; delay: number }[] = [
+  { id: "bubble",      delay: 300  },
+  { id: "init",        delay: 900  },
+  { id: "kickstart",   delay: 2100 },
+  { id: "first-run",   delay: 3600 },
+  { id: "in-progress", delay: 5100 },
+  { id: "completed",   delay: 6600 },
+  { id: "cta",         delay: 7800 },
+  { id: "actions",     delay: 8500 },
+];
+
 /* ── Page ───────────────────────────────────────────────────────────────────── */
 export default function ChatPage() {
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
+  const [visible, setVisible] = useState<Set<StepId>>(new Set());
+  const [done, setDone] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  /* Kick off the reveal timers on mount */
+  useEffect(() => {
+    const timers = REVEAL.map(({ id, delay }) =>
+      setTimeout(() => {
+        setVisible((v) => new Set([...v, id]));
+        if (id === "actions") setDone(true);
+      }, delay)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, []);
+
+  /* Smooth-scroll to bottom whenever a new step appears */
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [visible]);
+
+  /* Shorthand: render children only when step is visible, with fade+slide animation */
+  const Show = ({ id, children }: { id: StepId; children: React.ReactNode }) =>
+    visible.has(id) ? <div className="chat-reveal">{children}</div> : null;
 
   return (
     <AppLayout activePage="chat">
-      {/*
-        Three-column layout inside the main area:
-          [left sidebar — AppLayout]  |  [chat — flex-1]  |  [right panel — fixed width]
-        The outer div is h-full (AppLayout's <main> is already h-full).
-      */}
       <div className="h-full flex flex-col">
 
         {/* ── Top header bar ───────────────────────────────────────────────── */}
@@ -238,21 +270,22 @@ export default function ChatPage() {
             <div className="flex-1 overflow-y-auto">
               <div className="max-w-[740px] mx-auto px-6 py-6 flex flex-col gap-7">
 
-                {/* User message bubble */}
-                <div className="flex justify-end">
-                  <div
-                    className="px-3 py-2 rounded-[8px]"
-                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)" }}
-                  >
-                    <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-brand-light)" }}>
-                      Run pipeline
-                    </span>
+                {/* 1 · User bubble */}
+                <Show id="bubble">
+                  <div className="flex justify-end">
+                    <div
+                      className="px-3 py-2 rounded-[8px]"
+                      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)" }}
+                    >
+                      <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-brand-light)" }}>
+                        Run pipeline
+                      </span>
+                    </div>
                   </div>
-                </div>
+                </Show>
 
-                {/* AI response */}
-                <div className="flex flex-col gap-7 w-full">
-                  {/* Init block */}
+                {/* 2 · Init block */}
+                <Show id="init">
                   <div
                     className="flex items-center p-1 rounded-[var(--radius-md)]"
                     style={{ background: "var(--color-harness-black)", border: "1px solid rgba(255,255,255,0.06)" }}
@@ -264,9 +297,11 @@ export default function ChatPage() {
                       </span>
                     </div>
                   </div>
+                </Show>
 
-                  {/* Steps */}
-                  <div className="flex flex-col gap-9 px-4">
+                {/* 3–6 · Steps */}
+                <div className="flex flex-col gap-9 px-4">
+                  <Show id="kickstart">
                     <Step
                       label="Kickstarting process"
                       text={
@@ -285,11 +320,22 @@ export default function ChatPage() {
                         </div>
                       }
                     />
-                    <Step label="Starting first run" text="I'm now running the pipeline to validate your repository setup." />
-                    <Step label="Run in progress" text="I'm executing the configured stages and collecting the first results." />
-                    <Step label="Run completed successfully" text="Tests passed, build completed, and I found one suggested improvement for future runs." />
+                  </Show>
 
-                    {/* Continue from here */}
+                  <Show id="first-run">
+                    <Step label="Starting first run" text="I'm now running the pipeline to validate your repository setup." />
+                  </Show>
+
+                  <Show id="in-progress">
+                    <Step label="Run in progress" text="I'm executing the configured stages and collecting the first results." />
+                  </Show>
+
+                  <Show id="completed">
+                    <Step label="Run completed successfully" text="Tests passed, build completed, and I found one suggested improvement for future runs." />
+                  </Show>
+
+                  {/* 7 · Continue from here */}
+                  <Show id="cta">
                     <div className="flex flex-col gap-5">
                       <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-muted)" }}>
                         You can continue from here
@@ -307,26 +353,35 @@ export default function ChatPage() {
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </Show>
 
-                  {/* Action row */}
-                  <div className="flex items-center gap-3 px-4">
-                    <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
-                      <IconCopy size={16} />
-                    </button>
-                    <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
-                      <IconThumb size={16} />
-                    </button>
-                    <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
-                      <IconDots size={16} />
-                    </button>
-                  </div>
-
-                  {/* Next prompt avatar */}
-                  <div className="px-4">
-                    <HarnessIcon size={20} />
-                  </div>
+                  {/* 8 · Action icons */}
+                  <Show id="actions">
+                    <div className="flex items-center gap-3">
+                      <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
+                        <IconCopy size={16} />
+                      </button>
+                      <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
+                        <IconThumb size={16} />
+                      </button>
+                      <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
+                        <IconDots size={16} />
+                      </button>
+                    </div>
+                  </Show>
                 </div>
+
+                {/* Harness logo — always visible, spins while loading, anchors scroll */}
+                {visible.has("init") && (
+                  <div className="px-4 pb-4">
+                    <div className={done ? undefined : "spin-slow"} style={{ display: "inline-flex" }}>
+                      <HarnessIcon size={20} />
+                    </div>
+                  </div>
+                )}
+
+                {/* Scroll anchor — keeps view at the latest message */}
+                <div ref={bottomRef} />
               </div>
             </div>
 
