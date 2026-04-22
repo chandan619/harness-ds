@@ -191,6 +191,13 @@ function ChatPrompt() {
 /* ── Progressive reveal schedule ───────────────────────────────────────────── */
 type StepId = "bubble" | "init" | "kickstart" | "first-run" | "in-progress" | "completed" | "cta" | "actions";
 
+/* Defined OUTSIDE the page component so React sees a stable type and never
+   unmounts/remounts an already-visible step (which would replay the animation). */
+function Show({ id, visible, children }: { id: StepId; visible: Set<StepId>; children: React.ReactNode }) {
+  if (!visible.has(id)) return null;
+  return <div className="chat-reveal">{children}</div>;
+}
+
 const REVEAL: { id: StepId; delay: number }[] = [
   { id: "bubble",      delay: 300  },
   { id: "init",        delay: 900  },
@@ -225,10 +232,6 @@ export default function ChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [visible]);
 
-  /* Shorthand: render children only when step is visible, with fade+slide animation */
-  const Show = ({ id, children }: { id: StepId; children: React.ReactNode }) =>
-    visible.has(id) ? <div className="chat-reveal">{children}</div> : null;
-
   return (
     <AppLayout activePage="chat">
       <div className="h-full flex flex-col">
@@ -252,7 +255,7 @@ export default function ChatPage() {
             <button
               onClick={() => setRightPanelOpen((v) => !v)}
               className="cursor-pointer hover:opacity-80 transition-opacity"
-              style={{ color: rightPanelOpen ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
+              style={{ color: "var(--color-text-muted)", transform: "scaleX(-1)" }}
               title={rightPanelOpen ? "Hide panel" : "Show panel"}
             >
               <IconSidebarCollapse size={16} />
@@ -271,7 +274,7 @@ export default function ChatPage() {
               <div className="max-w-[740px] mx-auto px-6 py-6 flex flex-col gap-7">
 
                 {/* 1 · User bubble */}
-                <Show id="bubble">
+                <Show id="bubble" visible={visible}>
                   <div className="flex justify-end">
                     <div
                       className="px-3 py-2 rounded-[8px]"
@@ -285,7 +288,7 @@ export default function ChatPage() {
                 </Show>
 
                 {/* 2 · Init block */}
-                <Show id="init">
+                <Show id="init" visible={visible}>
                   <div
                     className="flex items-center p-1 rounded-[var(--radius-md)]"
                     style={{ background: "var(--color-harness-black)", border: "1px solid rgba(255,255,255,0.06)" }}
@@ -301,7 +304,7 @@ export default function ChatPage() {
 
                 {/* 3–6 · Steps */}
                 <div className="flex flex-col gap-9 px-4">
-                  <Show id="kickstart">
+                  <Show id="kickstart" visible={visible}>
                     <Step
                       label="Kickstarting process"
                       text={
@@ -322,20 +325,20 @@ export default function ChatPage() {
                     />
                   </Show>
 
-                  <Show id="first-run">
+                  <Show id="first-run" visible={visible}>
                     <Step label="Starting first run" text="I'm now running the pipeline to validate your repository setup." />
                   </Show>
 
-                  <Show id="in-progress">
+                  <Show id="in-progress" visible={visible}>
                     <Step label="Run in progress" text="I'm executing the configured stages and collecting the first results." />
                   </Show>
 
-                  <Show id="completed">
+                  <Show id="completed" visible={visible}>
                     <Step label="Run completed successfully" text="Tests passed, build completed, and I found one suggested improvement for future runs." />
                   </Show>
 
                   {/* 7 · Continue from here */}
-                  <Show id="cta">
+                  <Show id="cta" visible={visible}>
                     <div className="flex flex-col gap-5">
                       <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-muted)" }}>
                         You can continue from here
@@ -356,7 +359,7 @@ export default function ChatPage() {
                   </Show>
 
                   {/* 8 · Action icons */}
-                  <Show id="actions">
+                  <Show id="actions" visible={visible}>
                     <div className="flex items-center gap-3">
                       <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
                         <IconCopy size={16} />
