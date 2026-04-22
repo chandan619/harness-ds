@@ -1,13 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { OrDivider } from "@/components/OrDivider";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { FeatureItem } from "@/components/FeatureItem";
 import { PaginationDots } from "@/components/PaginationDots";
+import { HarnessIcon, HarnessLogo } from "@/components/icons";
 
-/* ── Provider icons ─────────────────────────────────────────────────────── */
+/* ── Provider icons ─────────────────────────────────────────────────────────── */
 function IconGoogle() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -18,7 +20,6 @@ function IconGoogle() {
     </svg>
   );
 }
-
 function IconGitHub() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -26,7 +27,6 @@ function IconGitHub() {
     </svg>
   );
 }
-
 function IconGitLab() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -40,7 +40,6 @@ function IconGitLab() {
     </svg>
   );
 }
-
 function IconBitbucket() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -49,7 +48,6 @@ function IconBitbucket() {
     </svg>
   );
 }
-
 function IconAzure() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -58,8 +56,6 @@ function IconAzure() {
     </svg>
   );
 }
-
-/* ── Feature Icons ────────────────────────────────────────────────────────── */
 function IconCheck() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -68,166 +64,220 @@ function IconCheck() {
   );
 }
 
-/* ── Harness Logo Icon ────────────────────────────────────────────────────── */
-function HarnessIcon({ size = 36 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 36 36" fill="none">
-      <path d="M18 2C9.16 2 2 9.16 2 18s7.16 16 16 16 16-7.16 16-16S26.84 2 18 2z" fill="var(--color-brand-light)" opacity="0.15"/>
-      <path d="M12 12h4v12h-4zM20 12h4v12h-4z" fill="var(--color-brand-light)"/>
-      <path d="M12 17h12v2H12z" fill="var(--color-brand-light)"/>
-    </svg>
-  );
-}
-
-function HarnessWordmark() {
-  return (
-    <svg width="92" height="20" viewBox="0 0 92 20" fill="none">
-      <text x="0" y="16" fontFamily="var(--font-sans)" fontSize="18" fontWeight="600" fill="white" letterSpacing="-0.5">harness</text>
-    </svg>
-  );
-}
-
-/* ── Trust Logos ─────────────────────────────────────────────────────────── */
+/* ── Trust / cert helpers ────────────────────────────────────────────────────── */
 function TrustLogos() {
-  const logos = ["Bloomberg", "ebay", "The New York Times", "cisco", "VMware"];
+  const logos = ["Bloomberg", "ebay", "NY Times", "Cisco", "VMware"];
   return (
-    <div className="flex items-center gap-6 opacity-70 flex-wrap">
+    <div className="flex items-center gap-5 opacity-60 flex-wrap">
       {logos.map((logo) => (
-        <span
-          key={logo}
-          className="text-[var(--color-text-primary)] font-medium text-[11px] tracking-[-0.01em] whitespace-nowrap"
-          style={{ fontStyle: logo === "The New York Times" ? "serif" : "normal" }}
-        >
+        <span key={logo} className="text-white font-medium text-[11px] tracking-[-0.01em] whitespace-nowrap">
           {logo}
         </span>
       ))}
     </div>
   );
 }
-
-/* ── Certification Badges ─────────────────────────────────────────────────── */
 function CertBadge({ label, sub }: { label: string; sub: string }) {
   return (
-    <div className="w-12 h-12 rounded-[100px] border border-[var(--color-border-input)] bg-[var(--color-surface-ghost)] flex flex-col items-center justify-center">
-      <span className="text-[8px] font-semibold text-[var(--color-text-primary)] leading-tight">{label}</span>
-      <span className="text-[7px] font-normal text-[var(--color-text-muted)] leading-tight">{sub}</span>
+    <div className="w-12 h-12 rounded-full border border-white/20 bg-white/[0.06] flex flex-col items-center justify-center">
+      <span className="text-[8px] font-semibold text-white leading-tight">{label}</span>
+      <span className="text-[7px] text-white/50 leading-tight">{sub}</span>
     </div>
   );
 }
 
-/* ── Slide Panel ─────────────────────────────────────────────────────────── */
-function SlidePanel() {
-  return (
-    <div className="gradient-brand relative overflow-hidden rounded-[var(--radius-lg)] flex flex-col justify-between p-10 lg:p-[60px] min-h-[600px]">
-      {/* BG decorative blobs */}
-      <div
-        className="absolute -bottom-32 -left-20 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none"
-        style={{ background: "var(--color-brand-light)" }}
-      />
-      <div
-        className="absolute top-1/2 right-0 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none"
-        style={{ background: "var(--color-brand-light)" }}
-      />
+/* ── Slide data ─────────────────────────────────────────────────────────────── */
+const SLIDES = [
+  {
+    headline: <>Simplify your <em className="not-italic text-white/50">DevOps</em> in minutes</>,
+    features: [
+      "Automate delivery with AI workflows.",
+      "Ship secure, resilient software.",
+      "Optimize cost with 100+ integrations.",
+    ],
+    testimonial: {
+      quote: "Partnerships like this are critical to delivering better outcomes for our customers on a global scale.",
+      stats: [
+        { icon: "🌍", value: "40+", label: "Countries" },
+        { icon: "👥", value: "200M+", label: "Monthly consumers" },
+      ],
+      name: "John Arroyo",
+      role: "Head of Developer Pipelines",
+    },
+    footer: (
+      <div className="flex flex-col gap-3">
+        <TrustLogos />
+      </div>
+    ),
+  },
+  {
+    headline: <>Ship faster with <em className="not-italic text-white/50">AI-native</em> CI/CD</>,
+    features: [
+      "Smart pipeline recommendations in seconds.",
+      "Real-time run insights and auto-fix suggestions.",
+      "One-click rollbacks and branch strategies.",
+    ],
+    testimonial: {
+      quote: "Harness cut our release cycle from two weeks to two hours. It's the biggest productivity unlock we've had.",
+      stats: [
+        { icon: "⚡", value: "10×", label: "Faster deploys" },
+        { icon: "📉", value: "60%", label: "Fewer incidents" },
+      ],
+      name: "Priya Shankar",
+      role: "VP Engineering, FinScale",
+    },
+    footer: (
+      <div className="flex flex-col gap-3">
+        <TrustLogos />
+      </div>
+    ),
+  },
+  {
+    headline: <>Enterprise <em className="not-italic text-white/50">security</em> you can trust</>,
+    features: [
+      "SOC2 Type II and ISO 27001 certified.",
+      "Zero-trust architecture, end-to-end encryption.",
+      "Full audit logs, RBAC and policy enforcement.",
+    ],
+    testimonial: {
+      quote: "The compliance tooling alone saved us three months of work. We were audit-ready from day one.",
+      stats: [
+        { icon: "🔒", value: "SOC2", label: "Type II" },
+        { icon: "✅", value: "100%", label: "Uptime SLA" },
+      ],
+      name: "Marcus Webb",
+      role: "CISO, Nexus Financial",
+    },
+    footer: (
+      <div className="flex items-center gap-2">
+        <CertBadge label="SOC2" sub="Type II" />
+        <CertBadge label="ISO" sub="42001" />
+        <CertBadge label="ISO" sub="27001" />
+      </div>
+    ),
+  },
+];
 
-      <div className="relative z-10 flex flex-col gap-10">
+/* ── Carousel panel ─────────────────────────────────────────────────────────── */
+function CarouselPanel() {
+  const [slide, setSlide] = useState(0);
+
+  /* Auto-advance every 5 seconds */
+  useEffect(() => {
+    const id = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  const current = SLIDES[slide];
+
+  return (
+    <div className="relative w-full h-full rounded-[20px] overflow-hidden flex flex-col"
+         style={{ background: "linear-gradient(180deg, #1c1c1c 0%, #0f4759 25.96%, #027093 50.48%, #018aca 76.44%, #00a1fc 100%)" }}>
+
+      {/* Decorative blobs */}
+      <div className="absolute -bottom-32 -left-20 w-[500px] h-[500px] rounded-full opacity-10 blur-3xl pointer-events-none"
+           style={{ background: "var(--color-brand-light)" }} />
+      <div className="absolute top-1/2 right-0 w-[400px] h-[400px] rounded-full opacity-10 blur-3xl pointer-events-none"
+           style={{ background: "var(--color-brand-light)" }} />
+
+      {/* Slide content — cross-fade */}
+      <div className="relative z-10 flex-1 flex flex-col justify-between p-10 overflow-hidden">
+
         {/* Logo */}
         <div className="flex items-center gap-2">
           <HarnessIcon size={20} />
-          <span className="text-[16px] font-semibold text-[var(--color-text-primary)] tracking-[-0.01em]">
-            harness
-          </span>
+          <HarnessLogo size={16} />
         </div>
 
-        {/* Hero text */}
-        <div>
-          <h2 className="text-[28px] font-medium text-[var(--color-text-primary)] tracking-[-0.01em] leading-[36px]">
-            Simplify your{" "}
-            <em className="not-italic text-[var(--color-text-muted)]">DevOps</em>{" "}
-            in minutes
+        {/* Sliding area */}
+        <div className="flex flex-col gap-8 flex-1 justify-center py-8">
+          {/* Headline */}
+          <h2
+            key={`h-${slide}`}
+            className="chat-reveal text-[26px] font-medium text-white tracking-[-0.01em] leading-[34px]"
+          >
+            {current.headline}
           </h2>
-        </div>
 
-        {/* Feature list */}
-        <div className="flex flex-col gap-4">
-          <FeatureItem icon={<IconCheck />} label="Automate delivery with AI workflows." />
-          <FeatureItem icon={<IconCheck />} label="Ship secure, resilient software." />
-          <FeatureItem icon={<IconCheck />} label="Optimize cost with 100+ integrations." />
-        </div>
-
-        {/* Testimonial */}
-        <TestimonialCard
-          quote="Partnerships like this are critical to delivering better outcomes for our customers on a global scale"
-          stats={[
-            { icon: "🌍", value: "40+", label: "Countries" },
-            { icon: "👥", value: "200M+", label: "Monthly consumers" },
-          ]}
-          name="John Arroyo"
-          role="Head of Developer Pipelines"
-        />
-
-        {/* Divider */}
-        <div className="h-px bg-[var(--color-surface-card)]" />
-
-        {/* Trust section */}
-        <div className="flex flex-col gap-[18px]">
-          <p className="text-[14px] font-normal text-[var(--color-text-secondary)] tracking-[-0.01em]">
-            Trusted by world-class engineering teams
-          </p>
-          <TrustLogos />
-        </div>
-
-        {/* Security badges */}
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1L2 3v4c0 2.21 1.79 4 4 4s4-1.79 4-4V3L6 1z" stroke="var(--color-text-secondary)" strokeWidth="1" fill="none"/>
-            </svg>
-            <span className="text-[12px] font-normal text-[var(--color-text-secondary)] tracking-[-0.01em]">
-              Enterprise-grade security
-            </span>
+          {/* Features */}
+          <div key={`f-${slide}`} className="chat-reveal flex flex-col gap-3">
+            {current.features.map((f) => (
+              <FeatureItem key={f} icon={<IconCheck />} label={f} />
+            ))}
           </div>
-          <div className="flex items-center gap-2">
-            <CertBadge label="SOC2" sub="Type II" />
-            <CertBadge label="ISO" sub="42001" />
-            <CertBadge label="ISO" sub="27001" />
+
+          {/* Testimonial */}
+          <div key={`t-${slide}`} className="chat-reveal">
+            <TestimonialCard
+              quote={current.testimonial.quote}
+              stats={current.testimonial.stats}
+              name={current.testimonial.name}
+              role={current.testimonial.role}
+            />
           </div>
+        </div>
+
+        {/* Footer (trust logos or certs) */}
+        <div key={`footer-${slide}`} className="chat-reveal flex flex-col gap-4">
+          <div className="h-px bg-white/10" />
+          <p className="text-[12px] text-white/60 tracking-[-0.01em]">Trusted by world-class engineering teams</p>
+          {current.footer}
         </div>
       </div>
 
-      {/* Pagination dots */}
-      <div className="relative z-10 flex justify-center mt-10">
-        <PaginationDots count={3} active={0} />
+      {/* Pagination dots — at the very bottom */}
+      <div className="relative z-10 flex justify-center pb-8">
+        <div className="flex items-center gap-2">
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setSlide(i)}
+              className="cursor-pointer transition-all duration-300"
+              aria-label={`Go to slide ${i + 1}`}
+            >
+              {i === slide
+                ? <div className="h-[6px] w-[16px] rounded-full bg-white" />
+                : <div className="h-[6px] w-[6px] rounded-full bg-white/30 hover:bg-white/50" />
+              }
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-/* ── Sign-up Form ─────────────────────────────────────────────────────────── */
+/* ── Sign-up Form ────────────────────────────────────────────────────────────── */
 function SignupForm() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
 
   return (
-    <div className="flex flex-col gap-10 w-full max-w-[348px] mx-auto">
-      {/* Heading */}
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-9 w-full max-w-[360px]">
+      {/* Logo + heading */}
+      <div className="flex flex-col gap-5">
         <HarnessIcon size={36} />
-        <div className="flex flex-col gap-4">
-          <h1 className="text-[24px] font-medium text-[var(--color-text-primary)] tracking-[-0.01em] leading-[36px]">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-[24px] font-medium text-white tracking-[-0.01em] leading-[32px]">
             Welcome to Harness
           </h1>
-          <p className="text-[14px] font-normal text-[var(--color-text-muted)] tracking-[-0.01em] leading-[20px]">
+          <p className="text-[14px] text-white/50 tracking-[-0.01em] leading-[20px]">
             Your AI-native workspace for pipelines, runs, and delivery workflows.
           </p>
         </div>
       </div>
 
-      {/* OAuth buttons */}
-      <div className="flex flex-col gap-4">
-        <Button variant="primary" fullWidth icon={<IconGoogle />}>
+      {/* OAuth */}
+      <div className="flex flex-col gap-3">
+        <Button
+          variant="primary"
+          fullWidth
+          icon={<IconGoogle />}
+          onClick={() => router.push("/home")}
+        >
           Continue with Google
         </Button>
 
-        {/* Icon row */}
         <div className="flex gap-2">
           {[
             { icon: <IconGitHub />, label: "GitHub" },
@@ -238,7 +288,9 @@ function SignupForm() {
             <button
               key={label}
               aria-label={`Continue with ${label}`}
-              className="flex-1 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-ghost)] border border-[var(--color-border-subtle)] hover:bg-white/10 transition-colors duration-[var(--duration-base)] cursor-pointer"
+              onClick={() => router.push("/home")}
+              className="flex-1 h-10 flex items-center justify-center rounded-[8px] bg-white/[0.06] border border-white/[0.08] hover:bg-white/10 transition-colors cursor-pointer"
+              style={{ color: "white" }}
             >
               {icon}
             </button>
@@ -246,7 +298,7 @@ function SignupForm() {
         </div>
       </div>
 
-      {/* OR divider */}
+      {/* Divider */}
       <OrDivider />
 
       {/* Email form */}
@@ -257,47 +309,45 @@ function SignupForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Button variant="ghost" fullWidth icon={
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M1 3.5h12M1 3.5l6 5 6-5M1 3.5v7h12v-7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        }>
+        <Button
+          variant="ghost"
+          fullWidth
+          icon={
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 3.5h12M1 3.5l6 5 6-5M1 3.5v7h12v-7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          }
+          onClick={() => router.push("/home")}
+        >
           Continue with Email
         </Button>
 
-        {/* Legal */}
-        <p className="text-[11px] font-normal text-[var(--color-text-faint)] tracking-[-0.01em] leading-[18px] text-center px-4">
+        <p className="text-[11px] text-white/30 tracking-[-0.01em] leading-[18px] text-center">
           By continuing, you agree to our{" "}
-          <a href="#" className="text-[var(--color-text-muted)] underline decoration-solid hover:text-[var(--color-text-secondary)] transition-colors">
-            Privacy Policy
-          </a>{" "}
-          and{" "}
-          <a href="#" className="text-[var(--color-text-muted)] underline decoration-solid hover:text-[var(--color-text-secondary)] transition-colors">
-            Terms of Use
-          </a>
-          .
+          <a href="#" className="text-white/50 underline hover:text-white/70 transition-colors">Privacy Policy</a>
+          {" "}and{" "}
+          <a href="#" className="text-white/50 underline hover:text-white/70 transition-colors">Terms of Use</a>.
         </p>
       </div>
     </div>
   );
 }
 
-/* ── Page ─────────────────────────────────────────────────────────────────── */
+/* ── Page ────────────────────────────────────────────────────────────────────── */
 export default function SignupPage() {
   return (
-    <div className="min-h-screen bg-[var(--color-harness-black)] flex items-center justify-center p-4 md:p-8">
-      <div className="w-full max-w-[1200px] rounded-[var(--radius-lg)] bg-[var(--color-harness-black)] overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-0 min-h-[640px]">
-          {/* Form — left on desktop, top on mobile */}
-          <div className="flex items-center justify-center p-8 lg:p-16 order-2 lg:order-1">
-            <SignupForm />
-          </div>
-          {/* Slide panel — right on desktop, top on mobile */}
-          <div className="order-1 lg:order-2 p-4 lg:p-4">
-            <SlidePanel />
-          </div>
-        </div>
+    <div className="h-screen flex overflow-hidden" style={{ background: "var(--color-harness-black)" }}>
+
+      {/* Left — form, always visible, scrollable if needed */}
+      <div className="flex-1 flex items-center justify-center overflow-y-auto px-8 py-12">
+        <SignupForm />
       </div>
+
+      {/* Right — carousel, hidden on small screens, grows with viewport */}
+      <div className="hidden lg:flex flex-1 h-full p-4">
+        <CarouselPanel />
+      </div>
+
     </div>
   );
 }
