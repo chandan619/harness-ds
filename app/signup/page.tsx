@@ -97,9 +97,8 @@ function Slide1() {
   return (
     <div className="flex flex-col gap-7">
       <h2 className="text-[28px] font-medium text-white tracking-[-0.02em] leading-[34px]">
-        Simplify your{" "}
-        <em className="not-italic text-white/45">DevOps</em>{" "}
-        in minutes
+        Simplify your<br />
+        <em className="not-italic text-white/45">DevOps</em> in minutes
       </h2>
 
       {/* Feature items */}
@@ -111,7 +110,7 @@ function Slide1() {
         ].map(({ icon, label }) => (
           <div key={label} className="flex items-center gap-3">
             <div className="w-6 h-6 rounded-[6px] flex items-center justify-center text-[11px] text-white/70 flex-shrink-0"
-                 style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                 style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)" }}>
               {icon}
             </div>
             <span className="text-[13px] text-white/80 tracking-[-0.01em] leading-[18px]">{label}</span>
@@ -121,7 +120,7 @@ function Slide1() {
 
       {/* Testimonial card */}
       <div className="flex flex-col gap-4 rounded-[12px] p-4"
-           style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}>
+           style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.1)" }}>
         {/* Company placeholder — replace with <img> when asset is ready */}
         <span className="text-[20px] font-light text-white/80 tracking-[0.05em] italic">citi</span>
         <p className="text-[13px] text-white/85 leading-[19px] tracking-[-0.01em]">
@@ -181,7 +180,7 @@ function Slide2() {
       <div className="grid grid-cols-2 gap-2.5">
         {GRID_ITEMS.map(({ label, icon }) => (
           <div key={label} className="flex items-center gap-3 p-3 rounded-[10px]"
-               style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}>
+               style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <div className="w-8 h-8 rounded-[8px] flex items-center justify-center text-[14px] text-white/70 flex-shrink-0"
                  style={{ background: "rgba(0,0,0,0.25)" }}>
               {icon}
@@ -239,7 +238,7 @@ function Slide3() {
       <div className="grid grid-cols-3 gap-2.5">
         {STEPS.map(({ num, label, icon }) => (
           <div key={num} className="flex flex-col justify-between p-3 rounded-[10px] min-h-[90px]"
-               style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}>
+               style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.1)" }}>
             <div className="flex items-start justify-between">
               <span className="text-[11px] font-semibold text-white/40">{num}</span>
               <span className="text-[14px] text-white/50">{icon}</span>
@@ -277,21 +276,21 @@ function CarouselPanel() {
       <div className="absolute top-[40%] right-[-80px] w-[360px] h-[360px] rounded-full opacity-10 blur-3xl pointer-events-none"
            style={{ background: "#00a1fc" }} />
 
-      {/* Main scrollable content */}
-      <div className="relative z-10 flex-1 flex flex-col overflow-y-auto px-10 pt-10 pb-6 gap-8">
-        {/* Logo */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <HarnessIcon size={20} />
-          <HarnessLogo size={16} />
-        </div>
+      {/* Content area — vertically + horizontally centred, scrollable */}
+      <div className="relative z-10 flex-1 flex items-center justify-center overflow-y-auto py-10 px-8">
+        <div className="w-full max-w-[520px] flex flex-col gap-7">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <HarnessIcon size={20} />
+            <HarnessLogo size={16} />
+          </div>
 
-        {/* Slide content — key forces remount + fade on slide change */}
-        <div key={slide} className="chat-reveal flex-1 flex flex-col justify-center">
-          {SLIDE_CONTENTS[slide]}
-        </div>
+          {/* Slide content — key forces remount + fade on slide change */}
+          <div key={slide} className="chat-reveal flex flex-col gap-7">
+            {SLIDE_CONTENTS[slide]}
+          </div>
 
-        {/* Footer — same on every slide */}
-        <div className="flex-shrink-0">
+          {/* Footer — same on every slide */}
           <SlideFooter />
         </div>
       </div>
