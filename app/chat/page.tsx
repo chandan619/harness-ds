@@ -8,7 +8,7 @@ import {
   IconHealthy,
 } from "@/components/icons";
 
-/* ── Right panel cards ─────────────────────────────────────────────────── */
+/* ── Right panel ────────────────────────────────────────────────────────────── */
 function RightPanelCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div
@@ -59,15 +59,13 @@ function SignalRow({ label, value }: { label: string; value: string }) {
 
 function RightPanel() {
   return (
-    <div className="flex flex-col gap-3.5 py-6 w-full">
-      {/* Run status */}
+    <div className="flex flex-col gap-3.5">
       <RightPanelCard title="Run status">
         <MetaRow icon={<IconCheck size={16} />} label="Completed successfully" />
         <MetaRow icon={<IconPipeline size={16} />} label="Run #1" />
         <MetaRow icon={<span className="text-[12px]">⏱</span>} label="Runtime: 4m 12s" />
       </RightPanelCard>
 
-      {/* Run stages */}
       <RightPanelCard title="Run stages">
         {["Repository connected", "Pipeline created", "Install dependencies", "Run unit tests", "Build application", "Security scan"].map((stage) => (
           <div key={stage} className="flex items-center gap-2 px-2 py-2 rounded-[6px]">
@@ -79,7 +77,6 @@ function RightPanel() {
         ))}
       </RightPanelCard>
 
-      {/* Key signals */}
       <RightPanelCard title="Key signals">
         <SignalRow label="Pipeline health" value="Healthy" />
         <SignalRow label="Setup completeness" value="80%" />
@@ -89,7 +86,7 @@ function RightPanel() {
   );
 }
 
-/* ── Chat step ─────────────────────────────────────────────────────────── */
+/* ── Chat step ──────────────────────────────────────────────────────────────── */
 function Step({ label, text }: { label: string; text: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -106,23 +103,20 @@ function Step({ label, text }: { label: string; text: React.ReactNode }) {
   );
 }
 
-/* ── Prompt input ──────────────────────────────────────────────────────── */
+/* ── Chat prompt ────────────────────────────────────────────────────────────── */
 function ChatPrompt() {
   return (
     <div className="flex flex-col gap-2 w-full">
-      {/* Main input */}
       <div
         className="flex flex-col rounded-[var(--radius-md)]"
         style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}
       >
-        <div className="flex items-center justify-between px-1.5 py-2 rounded-[var(--radius-md)]">
-          <div className="flex-1 px-2 py-3">
-            <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-disabled)" }}>
-              Ask about this run...
-            </span>
-          </div>
+        <div className="flex-1 px-4 py-3">
+          <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-disabled)" }}>
+            Ask about this run...
+          </span>
         </div>
-        <div className="flex items-center justify-between p-2 rounded-[var(--radius-md)]">
+        <div className="flex items-center justify-between p-2">
           <button
             className="flex items-center gap-2 p-2 rounded-[36px] cursor-pointer transition-colors hover:bg-white/10"
             style={{ background: "rgba(255,255,255,0.04)", color: "var(--color-text-muted)" }}
@@ -151,44 +145,42 @@ function ChatPrompt() {
         <div className="flex items-center gap-1.5">
           <button className="flex items-center gap-2 px-2 py-2 rounded-[6px] cursor-pointer hover:bg-white/5 transition-colors">
             <IconBranch size={16} />
-            <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
-              master
-            </span>
+            <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>master</span>
           </button>
           <span style={{ color: "var(--color-text-disabled)", fontSize: "8px" }}>→</span>
           <button className="px-2 py-2 rounded-[6px] cursor-pointer hover:bg-white/5 transition-colors">
-            <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
-              harness/co-pipeline-GYg8J
-            </span>
+            <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>harness/co-pipeline-GYg8J</span>
           </button>
         </div>
         <button className="flex items-center gap-2 px-2 py-2 rounded-[6px] cursor-pointer hover:bg-white/5 transition-colors">
           <IconRunner size={16} />
-          <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
-            harness-hosted runner
-          </span>
+          <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>harness-hosted runner</span>
         </button>
       </div>
     </div>
   );
 }
 
-/* ── Page ──────────────────────────────────────────────────────────────── */
+/* ── Page ───────────────────────────────────────────────────────────────────── */
 export default function ChatPage() {
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
 
   return (
     <AppLayout activePage="chat">
-      <div className="flex flex-col h-screen overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between px-7 pt-7 pb-4 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
-                payments-service-ci
-              </span>
-              <IconChevronRight size={9} />
-            </div>
+      {/*
+        Three-column layout inside the main area:
+          [left sidebar — AppLayout]  |  [chat — flex-1]  |  [right panel — fixed width]
+        The outer div is h-full (AppLayout's <main> is already h-full).
+      */}
+      <div className="h-full flex flex-col">
+
+        {/* ── Top header bar ───────────────────────────────────────────────── */}
+        <header className="flex-shrink-0 flex items-center justify-between px-7 py-5">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
+              payments-service-ci
+            </span>
+            <IconChevronRight size={9} />
           </div>
           <div className="flex items-center gap-5">
             <button
@@ -198,136 +190,143 @@ export default function ChatPage() {
               <IconShare size={9} />
               <span className="text-[12px] font-normal tracking-[-0.01em] leading-4">Share</span>
             </button>
-            {/* Toggle right panel */}
             <button
               onClick={() => setRightPanelOpen((v) => !v)}
-              className="cursor-pointer transition-colors hover:opacity-80"
+              className="cursor-pointer hover:opacity-80 transition-opacity"
               style={{ color: rightPanelOpen ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
-              title={rightPanelOpen ? "Hide stages panel" : "Show stages panel"}
+              title={rightPanelOpen ? "Hide panel" : "Show panel"}
             >
               <IconSidebarCollapse size={16} />
             </button>
           </div>
-        </div>
+        </header>
 
-        {/* Main content */}
-        <div className="flex flex-1 overflow-hidden gap-[66px] px-7 pb-5">
-          {/* Left: conversation */}
-          <div className="flex flex-col justify-between flex-1 min-w-0 max-w-[740px] overflow-y-auto">
-            <div className="flex flex-col gap-4 py-6 px-4">
-              {/* User message */}
-              <div className="flex justify-end pr-5">
-                <div
-                  className="px-3 py-2 rounded-[8px]"
-                  style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-brand-light)" }}>
-                    Run pipeline
-                  </span>
-                </div>
-              </div>
+        {/* ── Body: chat + right panel ─────────────────────────────────────── */}
+        <div className="flex-1 flex overflow-hidden">
 
-              {/* AI response */}
-              <div className="flex flex-col gap-7 w-full">
-                {/* Init block */}
-                <div
-                  className="flex items-center justify-between p-1 rounded-[var(--radius-md)]"
-                  style={{ background: "var(--color-harness-black)", border: "1px solid rgba(255,255,255,0.06)" }}
-                >
-                  <div className="flex items-center gap-2 px-2 py-2 rounded-[6px]">
-                    <HarnessIcon size={16} />
-                    <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-muted)" }}>
-                      Initialized new pipeline
+          {/* Center: conversation + prompt docked at bottom */}
+          <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+            {/* Messages — scrolls independently */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="max-w-[660px] mx-auto px-6 py-6 flex flex-col gap-7">
+
+                {/* User message bubble */}
+                <div className="flex justify-end">
+                  <div
+                    className="px-3 py-2 rounded-[8px]"
+                    style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-brand-light)" }}>
+                      Run pipeline
                     </span>
                   </div>
                 </div>
 
-                {/* Steps */}
-                <div className="flex flex-col gap-9 px-4">
-                  <Step
-                    label="Kickstarting process"
-                    text={
-                      <div className="flex flex-col gap-3">
-                        <p>Your CI pipeline is ready.</p>
-                        <div className="flex items-center gap-1 flex-wrap">
-                          <span>I created </span>
-                          <span
-                            className="px-1 py-0.5 rounded text-[14px]"
-                            style={{ background: "var(--color-harness-black)", border: "1px solid rgba(255,255,255,0.06)", color: "#fc6d26" }}
-                          >
-                            payments-service-ci
-                          </span>
-                          <span> using the repository and setup you approved.</span>
-                        </div>
-                      </div>
-                    }
-                  />
-                  <Step
-                    label="Starting first run"
-                    text="I'm now running the pipeline to validate your repository setup."
-                  />
-                  <Step
-                    label="Run in progress"
-                    text="I'm executing the configured stages and collecting the first results."
-                  />
-                  <Step
-                    label="Run completed successfully"
-                    text="Tests passed, build completed, and I found one suggested improvement for future runs."
-                  />
-
-                  {/* Continue from here */}
-                  <div className="flex flex-col gap-5">
-                    <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-muted)" }}>
-                      You can continue from here
-                    </span>
-                    <div className="flex flex-col gap-3">
-                      {["Explain this run", "Improve this pipeline", "Run on another branch"].map((action) => (
-                        <button
-                          key={action}
-                          className="flex items-center gap-2.5 w-fit cursor-pointer hover:opacity-80 transition-opacity"
-                          style={{ color: "var(--color-brand-light)" }}
-                        >
-                          <span className="text-[14px] font-normal tracking-[-0.01em] leading-5">{action}</span>
-                          <span style={{ fontSize: "10px" }}>↗</span>
-                        </button>
-                      ))}
+                {/* AI response */}
+                <div className="flex flex-col gap-7 w-full">
+                  {/* Init block */}
+                  <div
+                    className="flex items-center p-1 rounded-[var(--radius-md)]"
+                    style={{ background: "var(--color-harness-black)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    <div className="flex items-center gap-2 px-2 py-2 rounded-[6px]">
+                      <HarnessIcon size={16} />
+                      <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-muted)" }}>
+                        Initialized new pipeline
+                      </span>
                     </div>
                   </div>
-                </div>
 
-                {/* Action row */}
-                <div className="flex items-center gap-3 px-4">
-                  <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
-                    <IconCopy size={16} />
-                  </button>
-                  <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
-                    <IconThumb size={16} />
-                  </button>
-                  <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
-                    <IconDots size={16} />
-                  </button>
-                </div>
+                  {/* Steps */}
+                  <div className="flex flex-col gap-9 px-4">
+                    <Step
+                      label="Kickstarting process"
+                      text={
+                        <div className="flex flex-col gap-3">
+                          <p>Your CI pipeline is ready.</p>
+                          <div className="flex items-center gap-1 flex-wrap">
+                            <span>I created </span>
+                            <span
+                              className="px-1 py-0.5 rounded text-[14px]"
+                              style={{ background: "var(--color-harness-black)", border: "1px solid rgba(255,255,255,0.06)", color: "#fc6d26" }}
+                            >
+                              payments-service-ci
+                            </span>
+                            <span> using the repository and setup you approved.</span>
+                          </div>
+                        </div>
+                      }
+                    />
+                    <Step label="Starting first run" text="I'm now running the pipeline to validate your repository setup." />
+                    <Step label="Run in progress" text="I'm executing the configured stages and collecting the first results." />
+                    <Step label="Run completed successfully" text="Tests passed, build completed, and I found one suggested improvement for future runs." />
 
-                {/* Harness icon */}
-                <div className="flex items-center gap-5 px-4">
-                  <HarnessIcon size={20} />
+                    {/* Continue from here */}
+                    <div className="flex flex-col gap-5">
+                      <span className="text-[14px] font-normal tracking-[-0.01em] leading-5" style={{ color: "var(--color-text-muted)" }}>
+                        You can continue from here
+                      </span>
+                      <div className="flex flex-col gap-3">
+                        {["Explain this run", "Improve this pipeline", "Run on another branch"].map((action) => (
+                          <button
+                            key={action}
+                            className="flex items-center gap-2.5 w-fit cursor-pointer hover:opacity-80 transition-opacity"
+                            style={{ color: "var(--color-brand-light)" }}
+                          >
+                            <span className="text-[14px] font-normal tracking-[-0.01em] leading-5">{action}</span>
+                            <span style={{ fontSize: "10px" }}>↗</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action row */}
+                  <div className="flex items-center gap-3 px-4">
+                    <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
+                      <IconCopy size={16} />
+                    </button>
+                    <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
+                      <IconThumb size={16} />
+                    </button>
+                    <button className="cursor-pointer hover:opacity-70 transition-opacity" style={{ color: "var(--color-text-muted)" }}>
+                      <IconDots size={16} />
+                    </button>
+                  </div>
+
+                  {/* Next prompt avatar */}
+                  <div className="px-4">
+                    <HarnessIcon size={20} />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Prompt */}
-            <div className="pt-4 pb-2">
-              <ChatPrompt />
+            {/* Prompt — docked at bottom of chat column */}
+            <div className="flex-shrink-0 px-6 pb-5 pt-2">
+              <div className="max-w-[660px] mx-auto">
+                <ChatPrompt />
+              </div>
             </div>
           </div>
 
-          {/* Right: stages panel */}
+          {/* Right panel — fixed width, scrolls independently */}
           <div
-            className="transition-all duration-[var(--duration-slow)] overflow-hidden flex-shrink-0"
-            style={{ width: rightPanelOpen ? "280px" : "0px", opacity: rightPanelOpen ? 1 : 0 }}
+            className="flex-shrink-0 overflow-y-auto transition-all duration-[var(--duration-slow)]"
+            style={{
+              width: rightPanelOpen ? "280px" : "0px",
+              opacity: rightPanelOpen ? 1 : 0,
+              paddingTop: rightPanelOpen ? "8px" : "0",
+              paddingBottom: rightPanelOpen ? "20px" : "0",
+              paddingLeft: rightPanelOpen ? "0" : "0",
+              paddingRight: rightPanelOpen ? "16px" : "0",
+              borderLeft: rightPanelOpen ? "1px solid rgba(255,255,255,0.06)" : "none",
+            }}
           >
-            <RightPanel />
+            {rightPanelOpen && <RightPanel />}
           </div>
+
         </div>
       </div>
     </AppLayout>
