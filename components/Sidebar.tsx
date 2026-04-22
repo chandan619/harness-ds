@@ -88,26 +88,27 @@ export function Sidebar({ collapsed, onToggle, activePage }: SidebarProps) {
 
         {/* Project section */}
         {!collapsed && (
-          <div className="flex flex-col gap-3">
-            {/* Project name */}
-            <div className="flex items-center gap-1">
-              <span
-                className="text-[12px] font-normal leading-4 truncate"
+          <div className="flex flex-col gap-6">
+            {/* Project name + New pipeline */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-1 px-2">
+                <span
+                  className="text-[12px] font-normal leading-4 truncate"
+                  style={{ color: "var(--color-text-muted)" }}
+                >
+                  payments-service.github.io
+                </span>
+                <IconChevronDown size={9} />
+              </div>
+
+              <button
+                className="flex items-center gap-2.5 px-2 py-2 rounded-[6px] transition-colors hover:bg-white/5 cursor-pointer w-full text-left"
                 style={{ color: "var(--color-text-muted)" }}
               >
-                payments-service.github.io
-              </span>
-              <IconChevronDown size={9} />
+                <IconPlus size={16} />
+                <span className="text-[14px] font-normal tracking-[-0.01em] leading-5">New pipeline</span>
+              </button>
             </div>
-
-            {/* New pipeline */}
-            <button
-              className="flex items-center gap-2.5 px-2 py-2 rounded-[6px] transition-colors hover:bg-white/5 cursor-pointer w-full text-left"
-              style={{ color: "var(--color-text-muted)" }}
-            >
-              <IconPlus size={16} />
-              <span className="text-[14px] font-normal tracking-[-0.01em] leading-5">New pipeline</span>
-            </button>
 
             {/* History */}
             <div className="flex flex-col gap-1">
