@@ -267,7 +267,7 @@ function CarouselPanel() {
     <div
       className="relative w-full h-full rounded-[20px] overflow-hidden flex flex-col"
       style={{
-        background: "linear-gradient(180deg, #1c1c1c 0%, #0f4759 26%, #027093 50%, #018aca 76%, #00a1fc 100%)",
+        background: "linear-gradient(180deg, #0f4759 0%, #027093 45%, #018aca 72%, #00a1fc 100%)",
       }}
     >
       {/* Decorative blobs */}
