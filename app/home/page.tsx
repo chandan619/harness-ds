@@ -73,8 +73,8 @@ function PromptInput() {
         {SUGGESTIONS.map((s) => (
           <button
             key={s}
-            className="flex items-center gap-1.5 px-[18px] py-3 rounded-[var(--radius-md)] text-[12px] font-normal tracking-[-0.01em] leading-4 cursor-pointer transition-colors hover:bg-white/10"
-            style={{ background: "rgba(28,28,28,0.3)", color: "rgba(255,255,255,0.8)", whiteSpace: "nowrap" }}
+            className="flex items-center gap-1.5 px-[18px] py-3 rounded-[var(--radius-md)] text-[12px] font-normal tracking-[-0.01em] leading-4 cursor-pointer transition-colors bg-[rgba(28,28,28,0.3)] hover:bg-[rgba(28,28,28,0.55)]"
+            style={{ color: "rgba(255,255,255,0.8)", whiteSpace: "nowrap" }}
           >
             {s}
             <span style={{ color: "var(--color-text-faint)", fontSize: "10px" }}>↗</span>
@@ -115,8 +115,8 @@ function PipelinesContent() {
             </div>
           </div>
           <button
-            className="flex-shrink-0 px-3 py-1.5 rounded-[8px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors hover:bg-white/10"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "var(--color-text-muted)" }}
+            className="flex-shrink-0 px-3 py-1.5 rounded-[8px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.09]"
+            style={{ color: "var(--color-text-muted)" }}
           >
             View details
           </button>
@@ -156,8 +156,8 @@ function ActionItemsContent() {
             </div>
           </div>
           <button
-            className="self-start px-3 py-[6px] rounded-[6px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors hover:bg-white/10"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "var(--color-text-muted)" }}
+            className="self-start px-3 py-[6px] rounded-[6px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.09]"
+            style={{ color: "var(--color-text-muted)" }}
           >
             {cta}
           </button>
@@ -197,8 +197,8 @@ function KeySignalsContent() {
             </div>
           </div>
           <button
-            className="self-start px-3 py-[6px] rounded-[6px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors hover:bg-white/10"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "var(--color-text-muted)" }}
+            className="self-start px-3 py-[6px] rounded-[6px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.09]"
+            style={{ color: "var(--color-text-muted)" }}
           >
             View
           </button>
@@ -237,8 +237,8 @@ function RecentActivityContent() {
             <p className="text-[11px] font-normal tracking-[-0.01em] leading-[18px]" style={{ color: "rgba(255,255,255,0.35)" }}>{meta}</p>
           </div>
           <button
-            className="flex-shrink-0 px-3 py-1.5 rounded-[6px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors hover:bg-white/10"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "var(--color-text-muted)" }}
+            className="flex-shrink-0 px-3 py-1.5 rounded-[6px] text-[11px] font-normal tracking-[-0.01em] cursor-pointer transition-colors bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.09]"
+            style={{ color: "var(--color-text-muted)" }}
           >
             View
           </button>
@@ -250,7 +250,7 @@ function RecentActivityContent() {
 
 /* ── Bottom bar with functional tabs ──────────────────────────────────────── */
 function BottomBar() {
-  const [activeTab, setActiveTab] = useState<Tab>("Pipelines");
+  const [activeTab, setActiveTab] = useState<Tab>("Action Items");
 
   return (
     <div
@@ -266,12 +266,12 @@ function BottomBar() {
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
-                className="flex items-center gap-2.5 px-2 py-2 rounded-[8px] text-[14px] font-normal tracking-[-0.01em] leading-5 cursor-pointer transition-all"
-                style={{
-                  background: active ? "rgba(255,255,255,0.04)" : "transparent",
-                  border: active ? "1px solid rgba(255,255,255,0.08)" : "1px solid transparent",
-                  color: active ? "var(--color-text-primary)" : "var(--color-text-muted)",
-                }}
+                className={`flex items-center gap-2.5 px-2 py-2 rounded-[8px] text-[14px] font-normal tracking-[-0.01em] leading-5 cursor-pointer transition-all border ${
+                  active
+                    ? "bg-white/[0.04] border-white/[0.08]"
+                    : "border-transparent hover:bg-white/[0.05]"
+                }`}
+                style={{ color: active ? "var(--color-text-primary)" : "var(--color-text-muted)" }}
               >
                 <Icon size={16} />
                 {id}

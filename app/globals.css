@@ -79,6 +79,11 @@ html, body {
   outline: 2px solid var(--color-brand-light);
   outline-offset: 2px;
 }
+/* Suppress blue ring on text inputs — they have their own focus styling */
+textarea:focus-visible,
+input:focus-visible {
+  outline: none;
+}
 
 /* ─── Duration Tokens ────────────────────────────────────────────────────── */
 :root {
