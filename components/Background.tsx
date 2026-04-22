@@ -13,7 +13,7 @@ export function Background() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, #1c1c1c 0%, #0f4759 25.96%, #027093 50.48%, #018aca 76.44%, #00a1fc 100%)",
+            "linear-gradient(180deg, #0c1e26 0%, #0f3a50 28%, #1b6080 55%, #3d90a8 78%, #5ab0c8 100%)",
         }}
       />
 
