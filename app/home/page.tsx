@@ -301,11 +301,14 @@ function BottomBar() {
 export default function HomePage() {
   return (
     <AppLayout activePage="home" hasBg>
-      {/* Two-row flex column: scrollable hero on top, docked bottom bar below */}
-      <div className="h-full flex flex-col">
+      {/* Single scroll container — hero + bottom bar scroll together */}
+      <div className="h-full w-full overflow-y-auto">
 
-        {/* Hero — scrollable, fills remaining space */}
-        <div className="flex-1 overflow-y-auto flex flex-col items-center px-8 py-8">
+        {/* Hero — tall enough that only the bottom bar's tab row peeks below the fold */}
+        <div
+          className="flex flex-col items-center px-8 py-8"
+          style={{ minHeight: "calc(100% - 80px)" }}
+        >
           <div className="flex flex-col items-start gap-10 w-full max-w-[740px] my-auto">
             <div className="flex flex-col gap-7 w-full">
               <HarnessIcon size={36} />
@@ -328,8 +331,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Bottom bar — always docked, full width, no scroll */}
-        <div className="flex-shrink-0 px-8 pb-8 pt-0">
+        {/* Bottom bar — full width, revealed by scrolling */}
+        <div className="w-full px-8 pb-8">
           <BottomBar />
         </div>
 
