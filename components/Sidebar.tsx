@@ -98,7 +98,7 @@ export function Sidebar({ collapsed, onToggle, activePage }: SidebarProps) {
                 >
                   payments-service.github.io
                 </span>
-                <IconChevronDown size={9} />
+                <span style={{ color: "var(--color-text-muted)" }}><IconChevronDown size={9} /></span>
               </div>
 
               <button

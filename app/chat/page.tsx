@@ -207,7 +207,7 @@ export default function ChatPage() {
             <span className="text-[12px] font-normal tracking-[-0.01em] leading-4" style={{ color: "var(--color-text-muted)" }}>
               payments-service-ci
             </span>
-            <IconChevronRight size={9} />
+            <span style={{ color: "var(--color-text-muted)" }}><IconChevronRight size={9} /></span>
           </div>
           <div className="flex items-center gap-5">
             <button
@@ -236,7 +236,7 @@ export default function ChatPage() {
 
             {/* Messages — scrolls independently */}
             <div className="flex-1 overflow-y-auto">
-              <div className="max-w-[660px] mx-auto px-6 py-6 flex flex-col gap-7">
+              <div className="max-w-[740px] mx-auto px-6 py-6 flex flex-col gap-7">
 
                 {/* User message bubble */}
                 <div className="flex justify-end">
@@ -332,7 +332,7 @@ export default function ChatPage() {
 
             {/* Prompt — docked at bottom of chat column */}
             <div className="flex-shrink-0 px-6 pb-5 pt-2">
-              <div className="max-w-[660px] mx-auto">
+              <div className="max-w-[740px] mx-auto">
                 <ChatPrompt />
               </div>
             </div>
