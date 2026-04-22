@@ -265,16 +265,16 @@ function CarouselPanel() {
 
   return (
     <div
-      className="relative w-full h-full rounded-[20px] overflow-hidden flex flex-col"
+      className="relative w-full h-full rounded-[8px] overflow-hidden flex flex-col"
       style={{
-        background: "linear-gradient(180deg, #0f4759 0%, #027093 45%, #018aca 72%, #00a1fc 100%)",
+        background: "linear-gradient(180deg, #0c1e26 0%, #0f3a50 28%, #1b6080 55%, #3d90a8 78%, #5ab0c8 100%)",
       }}
     >
       {/* Decorative blobs */}
-      <div className="absolute -bottom-40 -left-24 w-[480px] h-[480px] rounded-full opacity-10 blur-3xl pointer-events-none"
-           style={{ background: "#00a1fc" }} />
-      <div className="absolute top-[40%] right-[-80px] w-[360px] h-[360px] rounded-full opacity-10 blur-3xl pointer-events-none"
-           style={{ background: "#00a1fc" }} />
+      <div className="absolute -bottom-40 -left-24 w-[480px] h-[480px] rounded-full opacity-[0.06] blur-3xl pointer-events-none"
+           style={{ background: "#5ab0c8" }} />
+      <div className="absolute top-[40%] right-[-80px] w-[360px] h-[360px] rounded-full opacity-[0.06] blur-3xl pointer-events-none"
+           style={{ background: "#5ab0c8" }} />
 
       {/* Content area — vertically + horizontally centred, scrollable */}
       <div className="relative z-10 flex-1 flex items-center justify-center overflow-y-auto py-10 px-8">
