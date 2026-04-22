@@ -1,11 +1,12 @@
 "use client";
 import { useState, ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
+import { Background } from "./Background";
 
 interface AppLayoutProps {
   children: ReactNode;
   activePage: "home" | "chat";
-  hasBg?: boolean; // home uses gradient bg
+  hasBg?: boolean; // home / sign-up use animated gradient bg
 }
 
 export function AppLayout({ children, activePage, hasBg = false }: AppLayoutProps) {
@@ -13,27 +14,20 @@ export function AppLayout({ children, activePage, hasBg = false }: AppLayoutProp
 
   return (
     <div
-      className="relative min-h-screen flex overflow-hidden"
+      className="relative h-screen flex overflow-hidden"
       style={{ background: hasBg ? undefined : "var(--color-harness-black)" }}
     >
-      {/* Gradient BG (home only) */}
-      {hasBg && (
-        <div className="absolute inset-0 gradient-brand" style={{ zIndex: 0 }}>
-          <div
-            className="absolute inset-0"
-            style={{ backdropFilter: "blur(200px)", background: "rgba(28,28,28,0.45)" }}
-          />
-        </div>
-      )}
+      {/* Animated gradient background */}
+      {hasBg && <Background />}
 
-      {/* Content layer */}
-      <div className="relative z-10 flex w-full p-2 gap-0">
+      {/* Content layer — fills exactly the viewport, no overflow */}
+      <div className="relative z-10 flex w-full h-full p-2 gap-0">
         <Sidebar
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed((v) => !v)}
           activePage={activePage}
         />
-        <main className="flex-1 min-w-0 overflow-hidden">
+        <main className="flex-1 min-w-0 overflow-hidden h-full">
           {children}
         </main>
       </div>

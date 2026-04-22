@@ -33,7 +33,7 @@ export function Sidebar({ collapsed, onToggle, activePage }: SidebarProps) {
       className="flex-shrink-0 flex flex-col justify-between rounded-[var(--radius-sm)] transition-all duration-[var(--duration-slow)]"
       style={{
         width: collapsed ? "48px" : "264px",
-        minHeight: "calc(100vh - 16px)",
+        height: "100%",
         background: "rgba(28,28,28,0.9)",
         border: "1px solid var(--color-border-input)",
         padding: collapsed ? "16px 8px" : "16px",

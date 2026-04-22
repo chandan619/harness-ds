@@ -80,6 +80,25 @@ html, body {
   outline-offset: 2px;
 }
 
+/* ─── Duration Tokens ────────────────────────────────────────────────────── */
+:root {
+  --duration-fast:   150ms;
+  --duration-normal: 250ms;
+  --duration-slow:   400ms;
+}
+
+/* ─── Animated Background Blobs ──────────────────────────────────────────── */
+@keyframes blobFloat1 {
+  0%,  100% { transform: translate(0px,   0px)  scale(1);    }
+  33%        { transform: translate(30px, -20px) scale(1.05); }
+  66%        { transform: translate(-20px, 15px) scale(0.97); }
+}
+@keyframes blobFloat2 {
+  0%,  100% { transform: translate(0px,   0px)  scale(1);    }
+  33%        { transform: translate(-40px, 20px) scale(1.03); }
+  66%        { transform: translate(25px, -30px) scale(1.06); }
+}
+
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-harness-black); }
