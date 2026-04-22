@@ -70,9 +70,8 @@ export function Sidebar({ collapsed, onToggle, activePage }: SidebarProps) {
               <Link
                 key={label}
                 href={href}
-                className="flex items-center gap-2.5 rounded-[6px] px-2 py-2 transition-colors"
+                className={`flex items-center gap-2.5 rounded-[6px] px-2 py-2 transition-colors hover:bg-white/5 ${isActive ? "bg-white/[0.04]" : ""}`}
                 style={{
-                  background: isActive ? "rgba(255,255,255,0.04)" : "transparent",
                   color: isActive ? "var(--color-text-primary)" : "var(--color-text-muted)",
                   whiteSpace: "nowrap",
                 }}
@@ -125,9 +124,8 @@ export function Sidebar({ collapsed, onToggle, activePage }: SidebarProps) {
                     <Link
                       key={label}
                       href={href}
-                      className="flex items-center gap-2.5 px-2 py-2 rounded-[6px] transition-colors"
+                      className={`flex items-center gap-2.5 px-2 py-2 rounded-[6px] transition-colors hover:bg-white/5 ${isActive ? "bg-white/[0.04]" : ""}`}
                       style={{
-                        background: isActive ? "rgba(255,255,255,0.04)" : "transparent",
                         color: isActive ? "var(--color-text-primary)" : "var(--color-text-muted)",
                         whiteSpace: "nowrap",
                       }}

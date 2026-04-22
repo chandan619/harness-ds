@@ -301,33 +301,43 @@ function BottomBar() {
 export default function HomePage() {
   return (
     <AppLayout activePage="home" hasBg>
-      <div className="flex flex-col items-center gap-5 px-8 py-8 h-full overflow-y-auto justify-between">
-        {/* Center hero */}
-        <div className="flex flex-col items-start gap-10 w-full max-w-[740px] mt-auto mb-auto pt-16">
-          <div className="flex flex-col gap-7 w-full">
-            <HarnessIcon size={36} />
-            <div className="flex flex-col gap-6">
-              <h1
-                className="text-[28px] font-medium tracking-[-0.01em] leading-9"
-                style={{ color: "var(--color-text-primary)" }}
-              >
-                Hi, Benjamin
-              </h1>
-              <p
-                className="text-[14px] font-normal tracking-[-0.01em] leading-5"
-                style={{ color: "rgba(255,255,255,0.6)" }}
-              >
-                Ask Harness AI about your pipelines, runs, repositories, or next steps.
-              </p>
+      {/* Outer scroll container — h-full so the viewport is fixed */}
+      <div className="h-full overflow-y-auto">
+
+        {/* Hero section — sized so exactly the bottom bar's tab row peeks below the fold */}
+        <div
+          className="flex flex-col items-center px-8 py-8"
+          style={{ minHeight: "calc(100% - 88px)" }}
+        >
+          <div className="flex flex-col items-start gap-10 w-full max-w-[740px] my-auto">
+            <div className="flex flex-col gap-7 w-full">
+              <HarnessIcon size={36} />
+              <div className="flex flex-col gap-2">
+                <h1
+                  className="text-[28px] font-medium tracking-[-0.01em] leading-9"
+                  style={{ color: "var(--color-text-primary)" }}
+                >
+                  Hi, Benjamin
+                </h1>
+                <p
+                  className="text-[14px] font-normal tracking-[-0.01em] leading-5"
+                  style={{ color: "rgba(255,255,255,0.6)" }}
+                >
+                  Ask Harness AI about your pipelines, runs, repositories, or next steps.
+                </p>
+              </div>
             </div>
+            <PromptInput />
           </div>
-          <PromptInput />
         </div>
 
-        {/* Bottom bar */}
-        <div className="w-full max-w-[1104px] pb-2">
-          <BottomBar />
+        {/* Bottom bar — revealed by scrolling down */}
+        <div className="flex justify-center px-8 pb-8">
+          <div className="w-full max-w-[1104px]">
+            <BottomBar />
+          </div>
         </div>
+
       </div>
     </AppLayout>
   );
