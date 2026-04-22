@@ -98,7 +98,7 @@ function Slide1() {
     <div className="flex flex-col gap-7">
       <h2 className="text-[28px] font-medium text-white tracking-[-0.02em] leading-[34px]">
         Simplify your<br />
-        <em className="not-italic text-white/45">DevOps</em> in minutes
+        <em className="not-italic text-white/50">DevOps</em> in minutes
       </h2>
 
       {/* Feature items */}
@@ -110,20 +110,20 @@ function Slide1() {
         ].map(({ icon, label }) => (
           <div key={label} className="flex items-center gap-3">
             <div className="w-6 h-6 rounded-[6px] flex items-center justify-center text-[11px] text-white/70 flex-shrink-0"
-                 style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)" }}>
+                 style={{ background: "rgba(28,28,28,0.16)", border: "1px solid rgba(255,255,255,0.12)" }}>
               {icon}
             </div>
-            <span className="text-[13px] text-white/80 tracking-[-0.01em] leading-[18px]">{label}</span>
+            <span className="text-[13px] text-white/90 tracking-[-0.01em] leading-[18px]">{label}</span>
           </div>
         ))}
       </div>
 
       {/* Testimonial card */}
       <div className="flex flex-col gap-4 rounded-[12px] p-4"
-           style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.1)" }}>
+           style={{ background: "rgba(28,28,28,0.16)", border: "1px solid rgba(255,255,255,0.12)" }}>
         {/* Company placeholder — replace with <img> when asset is ready */}
         <span className="text-[20px] font-light text-white/80 tracking-[0.05em] italic">citi</span>
-        <p className="text-[13px] text-white/85 leading-[19px] tracking-[-0.01em]">
+        <p className="text-[13px] text-white/90 leading-[19px] tracking-[-0.01em]">
           Partnerships like this are critical to delivering better outcomes for our customers on a global scale
         </p>
         {/* Stats */}
@@ -173,19 +173,19 @@ function Slide2() {
     <div className="flex flex-col gap-6">
       <h2 className="text-[28px] font-medium text-white tracking-[-0.02em] leading-[34px]">
         DevOps AI<br />
-        <em className="not-italic text-white/45">Across</em> the SDLC
+        <em className="not-italic text-white/50">Across</em> the SDLC
       </h2>
 
       {/* 2×2 capability grid */}
       <div className="grid grid-cols-2 gap-2.5">
         {GRID_ITEMS.map(({ label, icon }) => (
           <div key={label} className="flex items-center gap-3 p-3 rounded-[10px]"
-               style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.1)" }}>
+               style={{ background: "rgba(28,28,28,0.16)", border: "1px solid rgba(255,255,255,0.12)" }}>
             <div className="w-8 h-8 rounded-[8px] flex items-center justify-center text-[14px] text-white/70 flex-shrink-0"
                  style={{ background: "rgba(0,0,0,0.25)" }}>
               {icon}
             </div>
-            <span className="text-[12px] text-white/80 tracking-[-0.01em] leading-[16px] flex-1 whitespace-pre-line">{label}</span>
+            <span className="text-[12px] text-white/90 leading-[16px] flex-1 whitespace-pre-line">{label}</span>
             <span className="text-white/40 text-[11px]">✓</span>
           </div>
         ))}
@@ -226,7 +226,7 @@ function Slide3() {
       <div className="flex flex-col gap-3">
         <h2 className="text-[28px] font-medium text-white tracking-[-0.02em] leading-[34px]">
           Set up your<br />
-          <em className="not-italic text-white/45">CI Pipeline</em> instantly
+          <em className="not-italic text-white/50">CI Pipeline</em> instantly
         </h2>
         <p className="text-[13px] text-white/60 leading-[19px] tracking-[-0.01em]">
           Connect your codebase, let Harness understand your repository,
@@ -238,12 +238,12 @@ function Slide3() {
       <div className="grid grid-cols-3 gap-2.5">
         {STEPS.map(({ num, label, icon }) => (
           <div key={num} className="flex flex-col justify-between p-3 rounded-[10px] min-h-[90px]"
-               style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.1)" }}>
+               style={{ background: "rgba(28,28,28,0.16)", border: "1px solid rgba(255,255,255,0.12)" }}>
             <div className="flex items-start justify-between">
               <span className="text-[11px] font-semibold text-white/40">{num}</span>
               <span className="text-[14px] text-white/50">{icon}</span>
             </div>
-            <span className="text-[12px] text-white/85 tracking-[-0.01em] leading-[16px] whitespace-pre-line mt-3">{label}</span>
+            <span className="text-[12px] text-white leading-[16px] whitespace-pre-line mt-3">{label}</span>
           </div>
         ))}
       </div>
@@ -280,9 +280,9 @@ function CarouselPanel() {
       <div className="relative z-10 flex-1 flex items-center justify-center overflow-y-auto py-10 px-8">
         <div className="w-full max-w-[520px] flex flex-col gap-7">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <HarnessIcon size={20} />
-            <HarnessLogo size={16} />
+          <div className="flex items-center gap-2.5">
+            <HarnessIcon size={28} />
+            <HarnessLogo size={20} />
           </div>
 
           {/* Slide content — key forces remount + fade on slide change */}
